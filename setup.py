@@ -1,8 +1,6 @@
-import os
-from setuptools import setup, find_packages
-
 from marx import __version__
-import glob
+from setuptools import setup, find_packages
+import os
 
 README = "README.md"
 
@@ -11,21 +9,6 @@ local = lambda x: os.path.join(base, x)
 
 def read(fname):
     return open(local(fname)).read()
-
-def hydrate_examples():
-    examples = {}
-    for f in glob.glob(local('examples/*')) + glob.glob(local('tests/*')) + glob.glob(local('tests/*/*')):
-        if os.path.isdir(f):
-            continue
-        examples[os.path.basename(f)] = "\n    ".join(read(f).split("\n"))
-    #print examples.keys()
-    readme = read(README +".in") % examples
-    with open(local(README), "w") as f:
-        f.write(readme)
-
-hydrate_examples()
-
-#     setup_requires=['nose>=1.0', 'coverage>=3.6', 'nosexcover', 'mock'],
 
 setup(
     name="marx-workflows",
