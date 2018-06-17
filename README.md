@@ -63,7 +63,7 @@ You'll find the [full example](./tests/workflow/example_1.py) in the tests/ dire
         """Makes the pie."""
     
         maker = ArgSpec(User, docs="The person making pie.")
-        pie = ResultSpec(basestring, docs="Kind of pie")
+        pie = ResultSpec(str, docs="Kind of pie")
     
         def __call__(self, maker):
             maker.increment("pies_made", 1)

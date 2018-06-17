@@ -48,7 +48,7 @@ class MakePie(LogicUnit):
     """Makes the pie."""
 
     maker = ArgSpec(User, docs="The person making pie.")
-    pie = ResultSpec(basestring, docs="Kind of pie")
+    pie = ResultSpec(str, docs="Kind of pie")
 
     def __call__(self, maker):
         maker.increment("pies_made", 1)

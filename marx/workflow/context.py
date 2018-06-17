@@ -29,20 +29,18 @@ class Field(object):
 class ContextBase(type):
     def __new__(cls, name, bases, attrs):
         contributors = {}
-        for k, v in attrs.iteritems():
+        for k, v in attrs.items():
             if hasattr(v, 'contribute_to_class'):
                 contributors[k] = v
         for k in contributors:
             attrs.pop(k)
         cls = super(ContextBase, cls).__new__(cls, name, bases, attrs)
-        for k, v in contributors.iteritems():
+        for k, v in contributors.items():
             v.contribute_to_class(cls, k)
         return cls
 
 
-class DefaultContext(object):
-    __metaclass__ = ContextBase
-
+class DefaultContext(object, metaclass=ContextBase):
     message = Field()
 
     def __init__(self, workflow=None):

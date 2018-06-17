@@ -25,7 +25,7 @@ class Step(object):
         """
 
         # allow late binding by providing a string
-        if isinstance(call, basestring):
+        if isinstance(call, str):
             mod, func = call.rsplit('.', 1)
             call = getattr(__import__(mod, fromlist=[func]), func)
         assert callable(call)
@@ -65,10 +65,10 @@ class Step(object):
         self.result_mapper(result, context)
 
     def default_result_mapper(self, result, context, mapping):
-        for to_key, from_mapper in mapping.iteritems():
+        for to_key, from_mapper in mapping.items():
             if callable(from_mapper):
                 value = from_mapper(result, context)
-            elif isinstance(from_mapper, basestring):
+            elif isinstance(from_mapper, str):
                 value = result[from_mapper]
             elif isinstance(from_mapper, (list, tuple)):
                 value = result
@@ -78,7 +78,7 @@ class Step(object):
 
     def default_arg_mapper(self, context, mapping): # @UnusedVariable
         kwargs = {}
-        for to_kwarg, from_key in mapping.iteritems():
+        for to_kwarg, from_key in mapping.items():
             kwargs[to_kwarg] = getattr(context, from_key)
         return kwargs
 
@@ -137,7 +137,7 @@ class ArgSpec(object):
         self.normalizer = kwargs.pop('normalizer', self.default_normalizer)
 
         if nullable:
-            self.types += (types.NoneType,)
+            self.types += (type(None),)
             if self.default == self.__UNSPECIFIED:
                 self.default = None
         if kwargs:
@@ -184,7 +184,7 @@ class ResultObject(dict):
     """
     def __init__(self, fields):
         object.__setattr__(self, '_fields', fields)
-        object.__setattr__(self, '_values', {name: spec._default for name, spec in fields.iteritems()})
+        object.__setattr__(self, '_values', {name: spec._default for name, spec in fields.items()})
 
     def __getattr__(self, name):
         return self._values[name]
@@ -244,9 +244,7 @@ class ResultSpec(object):
         return wrapper
 
 
-class LogicUnit(object):
-    __metaclass__ = LogicUnitBase
-
+class LogicUnit(object, metaclass=LogicUnitBase):
     def __call__(self):
         abstract # @UndefinedVariable ~ this is a python guru move
 
@@ -282,7 +280,7 @@ class LogicUnit(object):
     @classmethod
     def ResultMap(cls, ctx_cls, overrides=None):
         spec = {}
-        for name, _ in cls._result_fields.iteritems():
+        for name, _ in cls._result_fields.items():
             if hasattr(ctx_cls, name):
                 spec[name] = name
         if overrides:

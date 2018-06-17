@@ -25,12 +25,12 @@ class Workflow(object):
             for step in self.steps:
                 try:
                     step(context=context)
-                except SkipStep, e:
+                except SkipStep as e:
                     continue
             return context
-        except Abort, a:
+        except Abort as a:
             return self.on_abort(context, a)
-        except Exception, e:
+        except Exception as e:
             return self.on_error(e, context)
 
     def add_step(self, *args, **kwargs):
@@ -38,7 +38,7 @@ class Workflow(object):
         return self
 
     def default_on_error(self, e, context):
-        raise type(e), e.message, sys.exc_info()[2]
+        raise e
 
     def default_on_abort(self, context, abort):
         return context
